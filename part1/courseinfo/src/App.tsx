@@ -22,11 +22,8 @@ const App = () => {
     ]
   }
 
-
-
   return (
     <div>
-      <Buttons />
       <Header course={course.name} />
       <Content parts={course.parts} />
       <Total total={course.parts.reduce((sum, part) => part.exercises + sum, 0)} />
