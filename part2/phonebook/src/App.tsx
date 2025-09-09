@@ -1,30 +1,65 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Numbers from './components/Numbers'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import personService from './services/persons'
+import type { Person } from "./types.ts";
+
+
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ]) 
+  const [persons, setPersons] = useState<Person[]>([]);
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+
+  useEffect(() => {
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons);
+      })
+  }, []); // empty array of dependencies
 
   const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const includePerson = persons.some(person => person.name === newName);
     if (includePerson) {
-      alert(`${newName} is already added to phonebook`)
+      const confirmed = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`);
+      const checkPerson = persons.find(person => person.name === newName);
+      if (confirmed && checkPerson) {
+        personService
+            .update(checkPerson.id, {name: newName, number: newNumber})
+            .then(updatedPerson => {
+              setPersons(persons.map(person => person.id === checkPerson.id ? updatedPerson : person))
+              setNewName('')
+              setNewNumber('')
+            })
+      }
     } else {
     const newPerson = { name: newName, number: newNumber }
-    setPersons([...persons, newPerson])
+    personService
+      .create(newPerson)
+      .then(createPerson => {
+        setPersons(persons.concat(createPerson))
+        setNewName('')
+        setNewNumber('')
+      })
     }
-    setNewName('')
-    setNewNumber('')
+  }
+
+  const deletePerson = (id: string, name: string) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personService
+        .deletePerson(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+        .catch(() => {
+          alert(`Information of ${name} has already been removed from server`)
+          setPersons(persons.filter(person => person.id !== id))
+        })
+    }
   }
 
   const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,9 +87,9 @@ const App = () => {
       <h3>add a new</h3>
       <PersonForm addPerson={addPerson} handleNameChange={handleNameChange}
       handleNumberChange={handleNumberChange} newName={newName} newNumber={newNumber}/>
-      <Numbers persons={filteredPersons} />
+      <Numbers persons={filteredPersons} deletePerson={deletePerson}/>
     </div>
   )
 }
 
-export default App
+export default App;
