@@ -1,0 +1,16 @@
+:root {
+    --primary-color: #afb2ae;
+    --secondary-color: #000000;
+}
+.messageContainer {
+    border: 2px solid var(--secondary-color);
+    background-color: var(--primary-color);
+    padding-left: 1rem;
+    border-radius: 1rem;
+}
+
+.messageContainer p {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+}

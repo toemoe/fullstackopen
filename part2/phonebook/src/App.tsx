@@ -4,14 +4,14 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import personService from './services/persons'
 import type { Person } from "./types.ts";
-
-
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState<Person[]>([]);
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notification, setNotification] = useState<string | null>(null);
 
   useEffect(() => {
     personService
@@ -35,6 +35,13 @@ const App = () => {
               setNewName('')
               setNewNumber('')
             })
+            .catch(() => {
+              setNotification(`${checkPerson.name} has already been removed from server`)
+              setTimeout(() => {
+                setNotification(null)
+              }, 5000)
+              setPersons(persons.filter(person => person.id !== checkPerson.id))
+            })
       }
     } else {
     const newPerson = { name: newName, number: newNumber }
@@ -44,6 +51,10 @@ const App = () => {
         setPersons(persons.concat(createPerson))
         setNewName('')
         setNewNumber('')
+        setNotification(`Added ${newName} to phonebook`)
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
       })
     }
   }
@@ -83,6 +94,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
       <Filter filter={filter} onFilterChange={handleFilterChange}/>
       <h3>add a new</h3>
       <PersonForm addPerson={addPerson} handleNameChange={handleNameChange}
