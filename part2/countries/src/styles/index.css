@@ -1,0 +1,66 @@
+:root {
+    --primary-color: #c4c4c4;
+    --white: #f2f2f2;
+    --secondary-color: #000000;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: var(--primary-color);
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.countryName {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.countryName button {
+    height: 1.7rem;
+}
+
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.countriesList {
+    display: flex;
+    flex-direction: column;
+    width: 30rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--secondary-color);
+    padding: 1rem;
+    background-color: var(--white)
+}
+
+.countriesList label {
+    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+    font-weight: bold;
+}
+
+.countriesList input {
+    height: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.card button {
+    height: 1.8rem;
+    width: 100%;
+    font-size: 0.9rem;
+}
