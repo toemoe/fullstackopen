@@ -3,7 +3,6 @@ const morgan = require('morgan')
 const cors = require('cors')
 const app = express()
 
-app.use(express.static('dist'))
 app.use(cors())
 
 let persons = [
@@ -30,10 +29,6 @@ app.use(
     ].join(' ')
   })
 )
-
-app.get('/', (req, res) => {
-  res.send('Phonebook backend is running!')
-})
 
 app.get('/api/persons', (req, res) => {
   res.status(200).json(persons)
@@ -91,6 +86,12 @@ app.post('/api/persons', (req, res) => {
   persons = persons.concat(person)
   res.status(201).json(person)
 })
+
+const path = require('path')
+app.use(express.static('dist'))
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+  })
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
