@@ -4,6 +4,7 @@ const cors = require('cors')
 const app = express()
 
 app.use(cors())
+app.use(express.json()) 
 
 let persons = [
   { id: '1', name: 'Arto Hellas', number: '040-123456' },
@@ -88,11 +89,13 @@ app.post('/api/persons', (req, res) => {
 })
 
 const path = require('path')
-app.use(express.static('dist'))
-app.get('*', (req, res) => {
+app.use(express.static(path.join(__dirname, 'dist')))
+app.use((req, res, next) => {
+    if (req.path.startsWith('/api')) {
+        return next()
+    }
     res.sendFile(path.join(__dirname, 'dist', 'index.html'))
-  })
-
+})
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
