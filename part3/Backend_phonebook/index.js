@@ -3,9 +3,12 @@ const express = require('express')
 const morgan = require('morgan')
 const Phonebook = require('./models/phonebook')
 const path = require('path')
+const cors = require('cors')
+
 
 const app = express()
 
+app.use(cors())
 app.use(express.json()) 
 
 // logger
@@ -59,7 +62,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 app.put('/api/persons/:id', async (req, res, next) => {
   const { name, number } = req.body
     if (!name || !number) {
-      res.status(400).json({ error: 'name or number is missing' })
+      return res.status(400).json({ error: 'name or number is missing' })
     }
     try {
       const updatePerson = await Phonebook.findByIdAndUpdate(
