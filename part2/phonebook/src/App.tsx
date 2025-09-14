@@ -21,6 +21,11 @@ const App = () => {
       })
   }, []); // empty array of dependencies
 
+  const showNotification = (message: string) => {
+    setNotification(message)
+    setTimeout(() => setNotification(null), 5000)
+  }
+
   const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const includePerson = persons.some(person => person.name === newName);
@@ -34,12 +39,10 @@ const App = () => {
               setPersons(persons.map(person => person.id === checkPerson.id ? updatedPerson : person))
               setNewName('')
               setNewNumber('')
+              showNotification(`Updated ${newName}`)
             })
             .catch(() => {
-              setNotification(`${checkPerson.name} has already been removed from server`)
-              setTimeout(() => {
-                setNotification(null)
-              }, 5000)
+              showNotification(`${checkPerson.name} has already been removed from server`)
               setPersons(persons.filter(person => person.id !== checkPerson.id))
             })
       }
@@ -51,10 +54,22 @@ const App = () => {
         setPersons(persons.concat(createPerson))
         setNewName('')
         setNewNumber('')
-        setNotification(`Added ${newName} to phonebook`)
-        setTimeout(() => {
-          setNotification(null)
-        }, 5000)
+        showNotification(`Added ${newName} to phonebook`)
+      }).catch(error => {
+        let message = 'Something went wrong while adding a person'
+
+        if (error.response?.data?.error) {
+          const serverError = error.response.data.error
+          if (serverError.toLowerCase().includes('shorter than minimum allowed')) {
+            message = `Name must be at least 3 characters long`
+
+          } else if (serverError.toLowerCase().includes(`valid phone number`)) {
+            message = `Number must be at least 8 characters long and must be '-' separated`
+          } else {
+            message = `Validation error: ${serverError}`
+          }
+        }
+        showNotification(message)
       })
     }
   }
