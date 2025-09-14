@@ -9,7 +9,7 @@ const cors = require('cors')
 const app = express()
 
 app.use(cors())
-app.use(express.json()) 
+app.use(express.json())
 
 // logger
 morgan.token('body', (req) => JSON.stringify(req.body))
@@ -36,8 +36,8 @@ app.get('/api/persons', (req, res, next) => {
 
 app.get('/info', (req, res, next) => {
   Phonebook.countDocuments().then(count => {
-      const date = new Date()
-      res.send(`
+    const date = new Date()
+    res.send(`
       <p>Phonebook has info for ${count} people</p>
       <p>${date}</p>`
     )}).catch(error => { next(error) })
@@ -54,30 +54,30 @@ app.delete('/api/persons/:id', (req, res, next) => {
     if (result) {
       res.status(204).end()
     } else {
-      res.status(404).json({error: { message: 'Not found' },})
+      res.status(404).json({ error: { message: 'Not found' }, })
     }
   }).catch(error => next(error))
 })
 
 app.put('/api/persons/:id', async (req, res, next) => {
   const { name, number } = req.body
-    if (!name || !number) {
-      return res.status(400).json({ error: 'name or number is missing' })
-    }
-    try {
-      const updatePerson = await Phonebook.findByIdAndUpdate(
-        req.params.id,
-        { name, number },
-        { new: true, runValidators: true, context: 'query' },
-      )
-      if (updatePerson) {
-        res.json(updatePerson)
-      } else {res.status(404).json({ error: 'Not found' })}
-    } catch (error) { next(error) }
+  if (!name || !number) {
+    return res.status(400).json({ error: 'name or number is missing' })
+  }
+  try {
+    const updatePerson = await Phonebook.findByIdAndUpdate(
+      req.params.id,
+      { name, number },
+      { new: true, runValidators: true, context: 'query' },
+    )
+    if (updatePerson) {
+      res.json(updatePerson)
+    } else {res.status(404).json({ error: 'Not found' })}
+  } catch (error) { next(error) }
 })
 
 app.post('/api/persons', async (req, res, next) => {
-  const {name, number} = req.body
+  const { name, number } = req.body
 
   if (!name) {
     return res.status(400).json({ error: 'name is missing' })
@@ -91,16 +91,16 @@ app.post('/api/persons', async (req, res, next) => {
       return res.status(400).json({ error: 'name must be unique' })
     }
 
-  const person = new Phonebook({ name, number })
-  const savedPerson = await person.save()
-  res.status(201).json(savedPerson)
+    const person = new Phonebook({ name, number })
+    const savedPerson = await person.save()
+    res.status(201).json(savedPerson)
   } catch (error) { next(error) }
 })
 
 app.use(express.static(path.join(__dirname, 'dist')))
 app.use((req, res, next) => {
-    if (req.path.startsWith('/api')) { return next() }
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+  if (req.path.startsWith('/api')) { return next() }
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
 })
 
 const unknownEndpoint = (req, res) => {
