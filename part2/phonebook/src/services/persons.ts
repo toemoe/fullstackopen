@@ -6,7 +6,7 @@ interface Person {
     number: string;
 }
 
-const baseUrl = '/api/persons'
+const baseUrl = 'https://phonebookfs-82e3.onrender.com/api/persons'
 
 const getAll = () => {
   const request = axios.get(baseUrl)
