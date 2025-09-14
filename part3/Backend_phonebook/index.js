@@ -2,13 +2,14 @@ require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const Phonebook = require('./models/phonebook')
+const path = require('path')
+
 const app = express()
 
 app.use(express.json()) 
 
 // logger
 morgan.token('body', (req) => JSON.stringify(req.body))
-
 app.use(
   morgan(function (tokens, req, res) {
     return [
@@ -93,6 +94,12 @@ app.post('/api/persons', async (req, res, next) => {
   } catch (error) { next(error) }
 })
 
+app.use(express.static(path.join(__dirname, 'dist')))
+app.use((req, res, next) => {
+    if (req.path.startsWith('/api')) { return next() }
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+})
+
 const unknownEndpoint = (req, res) => {
   res.status(404).send({ error: 'unknown endpoint' })
 }
@@ -109,13 +116,6 @@ const errorHandler = (error, req, res, next) => {
 
   next(error)
 }
-
-const path = require('path')
-app.use(express.static(path.join(__dirname, 'dist')))
-app.use((req, res, next) => {
-    if (req.path.startsWith('/api')) { return next() }
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'))
-})
 
 app.use(errorHandler)
 
