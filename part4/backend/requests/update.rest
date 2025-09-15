@@ -1,0 +1,9 @@
+PUT http://localhost:3001/api/blogs/68c8505ae4f0ac92a26b748b
+Content-Type: application/json
+
+{
+  "title": "The Wither",
+  "author": "A. Sapkovskiy",
+  "url": "link",
+  "likes": 1000
+}
