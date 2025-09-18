@@ -18,7 +18,14 @@ blogsRouter.get('/:id', (request, response, next) => {
 })
 
 blogsRouter.post('/', (request, response, next) => {
-  const blog = new Blog(request.body)
+  const { title, url, author, likes } = request.body
+  if (!title || !url) {
+    return response.status(400).json({
+      error: 'title or url missing'
+    })
+  }
+
+  const blog = new Blog({ title, url, author, likes })
 
   blog.save().then(result => {
     response.status(201).json(result)
@@ -50,14 +57,15 @@ blogsRouter.put('/:id', async (request, response, next) => {
   } catch (error) { next(error) }
 })
 
-blogsRouter.delete('/:id', (request, response, next) => {
-  Blog.findByIdAndDelete(request.params.id).then(result => {
+blogsRouter.delete('/:id', async (request, response, next) => {
+  try {
+    const result = await Blog.findByIdAndDelete(request.params.id)
     if (result) {
       response.status(204).end()
     } else {
       response.status(404).json({ error: 'blog not found' })
     }
-  }).catch(error => { next(error) })
+  } catch (error) { next(error) }
 })
 
 module.exports = blogsRouter
