@@ -17,7 +17,7 @@ const getWeather = (lat: number, lon: number): Promise<WeatherData> => {
         }
     }).then(response => {
         const hourly = response.data.hourly;
-        const index = hourly.time.findIndex((t: string) => new Date(t) > new Date);
+        const index = hourly.time.findIndex((t: string) => new Date(t) > new Date());
         if (!hourly.temperature_2m.length) throw new Error("No weather data found");
         return {
             temperature: hourly.temperature_2m[index],

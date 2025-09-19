@@ -2,8 +2,8 @@ POST http://localhost:3001/api/blogs/
 Content-Type: application/json
 
 {
-  "title": "The Wither",
-  "author": "Sapkovskiy A.",
+  "title": "The Witcher",
+  "author": "A. Sapkovskiy",
   "url": "link",
-  "likes": 1
+  "likes": 15000
 }
