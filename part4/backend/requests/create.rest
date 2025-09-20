@@ -3,8 +3,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNlY29uZCBwZW9wbGUiLCJpZCI6IjY4Y2U5NmI3NGQ1N2VjODE1ZDU0MGE5MCIsImlhdCI6MTc1ODM5MDIzNX0.Axv_lGRr8m9ZDq6I8sbVpvk6IjFXPyled0ZcggcR1x8
 
 {
-  "title": "Я хочу грохнуть кускова!!",
-  "author": "Anya Z.",
+  "title": "Я 234324а!!",
+  "author": "Any23423423Z.",
   "url": "link",
   "likes": 10000000
 }
