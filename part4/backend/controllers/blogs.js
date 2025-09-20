@@ -25,9 +25,6 @@ blogsRouter.post('/', async (request, response, next) => {
     if (!title || !url) {
       return response.status(400).json({ error: 'title or url missing' })
     }
-    if (!request.useer || !request.user.id) {
-      return response.status(401).json({ error: 'token missing or invalid' })
-    }
 
     const user = await User.findById(request.user.id)
     if (!user) {
