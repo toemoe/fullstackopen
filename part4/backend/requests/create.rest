@@ -1,9 +1,10 @@
 POST http://localhost:3001/api/blogs/
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5vcm1hbCBwZW9wbGUiLCJpZCI6IjY4Y2Q5ZTg0NGFjMWY4OGYyNjk1ZmNkNyIsImlhdCI6MTc1ODM1NjgxN30.EvulsVrcVlpuKPSGXObFxe2UFiSFiEqih26pxu_9ihs
 
 {
-  "title": "The Witcher",
-  "author": "A. Sapkovskiy",
+  "title": "Shane",
+  "author": "B. Zan",
   "url": "link",
-  "likes": 15000
+  "likes": 1500
 }
