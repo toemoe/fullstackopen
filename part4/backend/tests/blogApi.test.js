@@ -105,6 +105,18 @@ describe('post', () => {
       .set('Authorization', `Bearer ${token}`).send(newBlog).expect(400)
     assert.deepStrictEqual(response.body.error, 'title or url missing')
   })
+
+  test('blog cannot be added without token', async () => {
+    const newBlog = {
+      title: 'Unauthorized blog',
+      author: 'Test Author',
+      url: 'http://test.com'
+    }
+    const response = await api.post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+    assert.deepStrictEqual(response.body.error, 'token missing')
+  })
 })
 
 describe('delete', () => {
