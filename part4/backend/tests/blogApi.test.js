@@ -1,20 +1,32 @@
+const bcrypt = require('bcrypt')
 const { test, before, after, describe } = require('node:test')
 const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const api = supertest(app)
 
+let token
+
 before(async () => {
-  const url = process.env.MONGODB_URI
-  await mongoose.connect(url)
+  await User.deleteMany({})
+  await Blog.deleteMany({})
+  const passwordHash = await bcrypt.hash('secret', 10)
+  const user = new User({ username: 'testuser', name: 'Test User', passwordHash })
+  await user.save()
+  const loginResponse = await api.post('/api/login')
+    .send({ username: 'testuser', password: 'secret' })
+    .expect(200)
+
+  token = loginResponse.body.token
 })
 
+
 after(async () => {
-  await mongoose.connection.close(() => {
-    console.log('connection closed')
-  })
+  await mongoose.connection.close()
+  console.log('connection closed')
 })
 
 describe('get', () => {
@@ -41,7 +53,9 @@ describe('post', () => {
       url: 'test',
       likes: 1
     }
-    const response = await api.post('/api/blogs').send(newBlog)
+    const response = await api.post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -59,7 +73,9 @@ describe('post', () => {
       url: 'test'
     }
 
-    const response = await api.post('/api/blogs').send(newBlog)
+    const response = await api.post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -75,7 +91,8 @@ describe('post', () => {
       author: 'test1',
       url: 'test1',
     }
-    const response = await api.post('/api/blogs').send(newBlog).expect(400)
+    const response = await api.post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`).send(newBlog).expect(400)
     assert.deepStrictEqual(response.body.error, 'title or url missing')
   })
 
@@ -84,16 +101,19 @@ describe('post', () => {
       author: 'test1',
       title: 'test1',
     }
-    const response = await api.post('/api/blogs').send(newBlog).expect(400)
+    const response = await api.post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`).send(newBlog).expect(400)
     assert.deepStrictEqual(response.body.error, 'title or url missing')
   })
 })
 
 describe('delete', () => {
   test('blog can be deleted', async () => {
-    const newBlog = new Blog({ title: 'To delete', author: 'Test', url: 'test.com', likes: 0 })
+    const user = await User.findOne({ username: 'testuser' })
+    const newBlog = new Blog({ title: 'To delete', author: 'Test', url: 'test.com', likes: 0, user: user._id })
     const savedBlog = await newBlog.save()
-    await api.delete(`/api/blogs/${savedBlog._id}`).expect(204)
+    await api.delete(`/api/blogs/${savedBlog._id}`)
+      .set('Authorization', `Bearer ${token}`).expect(204)
 
     const blogsAttEnd = await Blog.find({})
     const ids = blogsAttEnd.map(blog => blog.id)

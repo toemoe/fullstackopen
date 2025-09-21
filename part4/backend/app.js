@@ -9,14 +9,14 @@ const loginRouter = require('./controllers/login')
 
 const app = express()
 
+const mongoURL = process.env.NODE_ENV === 'test' ? config.TEST_MONGODB_URI : config.MONGODB_URI
 logger.info('connecting to', config.MONGODB_URI)
 
+mongoose.set('strictQuery', false)
 mongoose
-  .connect(config.MONGODB_URI)
+  .connect(mongoURL)
   .then(() => { logger.info('connected to MongoDB') })
-  .catch((error) => {
-    logger.error('error connecting to MongoDB:', error.message)
-  })
+  .catch((error) => { logger.error('error connecting to MongoDB:', error.message) })
 
 app.use(express.json())
 app.use(middleware.requestLogger)
