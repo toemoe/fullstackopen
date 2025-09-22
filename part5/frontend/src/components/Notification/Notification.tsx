@@ -2,16 +2,16 @@ interface NotificationProps {
   message: string | null;
 }
 
-const Notification = ({message}: NotificationProps) => {
+const Notification = ({ message }: NotificationProps) => {
   if (message === null) {
-      return null;
+    return null;
   }
 
   return (
-      <div>
-          <p>{message}</p>
-      </div>
-  )
-}
+    <div className="messageContainer">
+      <p>{message}</p>
+    </div>
+  );
+};
 
 export default Notification;

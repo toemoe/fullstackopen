@@ -3,12 +3,14 @@ import blogService from '../../services/blogs'
 import type { BlogType } from '../../types/types'
 import Blog from './Blog'
 import type { LoginResponse } from '../../services/login'
+import CreateBlog from './CreateBlog'
 
 interface BlogsContainerProps {
   user: LoginResponse
+  showNotification: (message: string) => void
 }
 
-const BlogsContainer = ({ user }: BlogsContainerProps) => {
+const BlogsContainer = ({ user, showNotification }: BlogsContainerProps) => {
   const [blogs, setBlogs] = useState<BlogType[]>([]);
 
   useEffect(() => {
@@ -27,7 +29,7 @@ const BlogsContainer = ({ user }: BlogsContainerProps) => {
 
   return (
     <div>
-      <h2>blogs</h2>
+      <CreateBlog setBlogs={setBlogs} showNotification={showNotification} />
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}

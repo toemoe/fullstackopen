@@ -1,27 +1,21 @@
 import React, { useState } from 'react';
 import loginService, { type LoginResponse } from '../../services/login';
-import Notification from '../Notification/Notification';
 import LoginForm from './LoginForm';
 import blogService from "../../services/blogs";
 
 interface LoginApplicationProps {
   user: LoginResponse | null,
   setUser: React.Dispatch<React.SetStateAction<LoginResponse | null>>
+  showNotification: (message: string) => void
 }
 
-const LoginApplication = ({user, setUser}: LoginApplicationProps) => {
+const LoginApplication = ({user, setUser, showNotification}: LoginApplicationProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [notification, setNotification] = useState<string | null>(null);
-
-  const showNotification = (message: string) => {
-    setNotification(message)
-    setTimeout(() => { setNotification(null) }, 5000);
-  }
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    console.log('logging in with', username, password)
+    console.log('logging in with', username)
 
     try {
       const user = await loginService.login({ username, password })
@@ -29,8 +23,9 @@ const LoginApplication = ({user, setUser}: LoginApplicationProps) => {
       setUser(user)
       setUsername('')
       setPassword('')
+      showNotification(`Welcome, ${user.name}`)
     } catch {
-      showNotification('wrong credentials')
+      showNotification('Wrong username or password')
     }
   }
 
@@ -43,11 +38,10 @@ const LoginApplication = ({user, setUser}: LoginApplicationProps) => {
   return (
     <div>
       <h1>Login Application</h1>
-      <Notification message={notification} />
 
       {user ? (
         <>
-          <p>Welcome, {user.name}</p>
+          <p>name: {user.name}</p>
           <button onClick={handleLogout}>Logout</button>
         </>
       ) : (
