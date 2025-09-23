@@ -9,7 +9,7 @@ const Blog = ({ blog }: BlogProps) => {
   return (
     <div >
       {blog.title} {blog.author}
-    </div> 
+    </div>
   )
 }
 

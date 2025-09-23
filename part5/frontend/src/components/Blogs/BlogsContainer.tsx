@@ -11,7 +11,7 @@ interface BlogsContainerProps {
 }
 
 const BlogsContainer = ({ user, showNotification }: BlogsContainerProps) => {
-  const [blogs, setBlogs] = useState<BlogType[]>([]);
+  const [blogs, setBlogs] = useState<BlogType[]>([])
 
   useEffect(() => {
     if (!user) return
@@ -20,7 +20,7 @@ const BlogsContainer = ({ user, showNotification }: BlogsContainerProps) => {
         const blogsFromServer = await blogService.getAll()
         setBlogs(blogsFromServer)
       } catch (error) {
-        console.error('Failed to fetch blogs', error);
+        console.error('Failed to fetch blogs', error)
       }
     }
 
@@ -37,4 +37,4 @@ const BlogsContainer = ({ user, showNotification }: BlogsContainerProps) => {
   )
 }
 
-export default BlogsContainer;
+export default BlogsContainer

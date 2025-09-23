@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import loginService, { type LoginResponse } from '../../services/login';
-import LoginForm from './LoginForm';
-import blogService from "../../services/blogs";
+import React, { useState } from 'react'
+import loginService, { type LoginResponse } from '../../services/login'
+import LoginForm from './LoginForm'
+import blogService from '../../services/blogs'
 
 interface LoginApplicationProps {
   user: LoginResponse | null,
@@ -9,9 +9,9 @@ interface LoginApplicationProps {
   showNotification: (message: string) => void
 }
 
-const LoginApplication = ({user, setUser, showNotification}: LoginApplicationProps) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+const LoginApplication = ({ user, setUser, showNotification }: LoginApplicationProps) => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -48,7 +48,7 @@ const LoginApplication = ({user, setUser, showNotification}: LoginApplicationPro
         <LoginForm handleLogin={handleLogin} setUsername={setUsername} setPassword={setPassword} username={username} password={password} />
       )}
     </div>
-  );
+  )
 }
 
-export default LoginApplication;
+export default LoginApplication
