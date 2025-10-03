@@ -18,7 +18,7 @@ const CreateBlog = ({ setBlogs, showNotification }: CreateBlogProps) => {
   const createNewBlog = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
-      const newBlog = await blogService.create({ title, author, url })
+      const newBlog = await blogService.create({ title, author, url, likes: 0 })
       setBlogs(prevBlogs => [...prevBlogs, newBlog])
       setTitle('')
       setAuthor('')

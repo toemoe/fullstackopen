@@ -27,12 +27,19 @@ const BlogsContainer = ({ user, showNotification }: BlogsContainerProps) => {
     fetchBlogs()
   }, [user])
 
+  const HandleDeleteBlog = async (id: string) => {
+    setBlogs(blogs.filter(blog => blog.id !== id))
+  }
+
   return (
     <div>
       <CreateBlog setBlogs={setBlogs} showNotification={showNotification} />
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+      {blogs
+        .slice()
+        .sort((a, b) => b.likes - a.likes)
+        .map(blog =>
+          <Blog key={blog.id} blog={blog} onDelete={HandleDeleteBlog}/>
+        )}
     </div>
   )
 }

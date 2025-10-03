@@ -3,5 +3,6 @@ export interface BlogType {
   title: string
   author: string
   url: string
-  likes?: number
+  likes: number
+  user?: string | { name: string };
 }
