@@ -6,8 +6,9 @@ const middleware = require('./utils/middleware')
 const blogsRouter = require('./controllers/blogs')
 const userRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
-
+const cors = require('cors')
 const app = express()
+app.use(cors())
 
 const mongoURL = process.env.NODE_ENV === 'test' ? config.TEST_MONGODB_URI : config.MONGODB_URI
 logger.info('connecting to', config.MONGODB_URI)
