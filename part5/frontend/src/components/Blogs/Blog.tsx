@@ -5,9 +5,10 @@ import type { BlogType } from '../../types/types.ts'
 interface BlogProps {
   blog: BlogType
   onDelete: (id: string) => void
+  onLike?: () => void // for teesting
 }
 
-const Blog = ({ blog, onDelete }: BlogProps) => {
+const Blog = ({ blog, onDelete, onLike }: BlogProps) => {
   const [visible, setVisible] = useState(false)
   const [likes, setLikes] = useState<number>(blog.likes ?? 0)
   const hideWhenVisible = { display: visible ? 'none' : '' }
@@ -26,6 +27,11 @@ const Blog = ({ blog, onDelete }: BlogProps) => {
   }
 
   const handleLike = async () => {
+    if (onLike) {
+      onLike()  // для теста вызываем мок
+      return
+    }
+
     try {
       const updatedBlog = { ...blog, likes: likes + 1 }
       const savedBlog = await blogService.update(blog.id, updatedBlog)
