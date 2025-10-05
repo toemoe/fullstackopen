@@ -5,7 +5,7 @@ const baseUrl = 'http://localhost:3001/api/blogs/'
 let token: string | null = null
 
 const setToken = (newToken: string | null) => {
-  token = `Bearer ${newToken}`
+  token = newToken ? `Bearer ${newToken}` : null
 }
 
 const getAll = () => {
