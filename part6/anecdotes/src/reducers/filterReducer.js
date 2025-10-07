@@ -1,5 +1,3 @@
-
-
 const filterReducer = (state = '', action) => {
   console.log(state)
   switch (action.type) {
