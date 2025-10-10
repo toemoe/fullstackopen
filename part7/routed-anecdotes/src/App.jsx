@@ -6,6 +6,8 @@ import AnecdoteList from './components/AnecdoteList'
 import About from './components/About'
 import CreateNew from './components/CreateNew'
 import Anecdote from './components/Anecdote'
+import { useNotification } from './context/NotificationContext'
+import Notification from './components/Notification'
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -25,11 +27,17 @@ const App = () => {
     }
   ])
 
-  const [notification, setNotification] = useState('')
+  const [notify, dispatch] = useNotification()
+
+  const showNotification = (message) => {
+    dispatch({ type: 'ADD', payload: message })
+    setTimeout(() => dispatch({ type: 'REMOVE' }), 5000)
+  }
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    showNotification(`A new anecdote ${anecdote.content} created`)
   }
 
   const anecdoteById = (id) => anecdotes.find(a => a.id === id)
@@ -44,6 +52,7 @@ const App = () => {
     <Router>
     <div>
       <h1>Software anecdotes</h1>
+      {notify && <Notification />}
       <Menu addNew={addNew} anecdotes={anecdotes} />
       <Routes>
         <Route path="/anecdotes/:id" element={<Anecdote anecdotes={anecdotes} />} />

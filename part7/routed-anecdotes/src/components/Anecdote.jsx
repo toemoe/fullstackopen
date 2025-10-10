@@ -7,6 +7,8 @@ const Anecdote = ({ anecdotes }) => {
     <div>
       <h2>{anecdote.content}</h2>
       <p>{anecdote.user}</p>
+      <p>{anecdote.author}</p>
+      <p>{anecdote.info}</p>
       <p><strong>has {anecdote.votes} votes</strong></p>
     </div>
   )
