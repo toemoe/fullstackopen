@@ -1,69 +1,75 @@
-import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Footer from './components/Footer'
-import Menu from './components/Menu'
-import AnecdoteList from './components/AnecdoteList'
-import About from './components/About'
-import CreateNew from './components/CreateNew'
-import Anecdote from './components/Anecdote'
-import { useNotification } from './context/NotificationContext'
-import Notification from './components/Notification'
+import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Footer from "./components/Footer";
+import Menu from "./components/Menu";
+import AnecdoteList from "./components/AnecdoteList";
+import About from "./components/About";
+import CreateNew from "./components/CreateNew";
+import Anecdote from "./components/Anecdote";
+import { useNotification } from "./context/NotificationContext";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
-      content: 'If it hurts, do it more often',
-      author: 'Jez Humble',
-      info: 'https://martinfowler.com/bliki/FrequencyReducesDifficulty.html',
+      content: "If it hurts, do it more often",
+      author: "Jez Humble",
+      info: "https://martinfowler.com/bliki/FrequencyReducesDifficulty.html",
       votes: 0,
-      id: 1
+      id: 1,
     },
     {
-      content: 'Premature optimization is the root of all evil',
-      author: 'Donald Knuth',
-      info: 'http://wiki.c2.com/?PrematureOptimization',
+      content: "Premature optimization is the root of all evil",
+      author: "Donald Knuth",
+      info: "http://wiki.c2.com/?PrematureOptimization",
       votes: 0,
-      id: 2
-    }
-  ])
+      id: 2,
+    },
+  ]);
 
-  const [notify, dispatch] = useNotification()
+  const [notify, dispatch] = useNotification();
 
   const showNotification = (message) => {
-    dispatch({ type: 'ADD', payload: message })
-    setTimeout(() => dispatch({ type: 'REMOVE' }), 5000)
-  }
+    dispatch({ type: "ADD", payload: message });
+    setTimeout(() => dispatch({ type: "REMOVE" }), 5000);
+  };
 
   const addNew = (anecdote) => {
-    anecdote.id = Math.round(Math.random() * 10000)
-    setAnecdotes(anecdotes.concat(anecdote))
-    showNotification(`A new anecdote ${anecdote.content} created`)
-  }
+    anecdote.id = Math.round(Math.random() * 10000);
+    setAnecdotes(anecdotes.concat(anecdote));
+    showNotification(`A new anecdote ${anecdote.content} created`);
+  };
 
-  const anecdoteById = (id) => anecdotes.find(a => a.id === id)
+  const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
 
   const vote = (id) => {
-    const anecdote = anecdoteById(id)
-    const voted = { ...anecdote, votes: anecdote.votes + 1 }
-    setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
-  }
+    const anecdote = anecdoteById(id);
+    const voted = { ...anecdote, votes: anecdote.votes + 1 };
+    setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
+  };
 
   return (
     <Router>
-    <div>
-      <h1>Software anecdotes</h1>
-      {notify && <Notification />}
-      <Menu addNew={addNew} anecdotes={anecdotes} />
-      <Routes>
-        <Route path="/anecdotes/:id" element={<Anecdote anecdotes={anecdotes} />} />
-        <Route path="/anecdotes" element={<AnecdoteList anecdotes={anecdotes}/>} />
-        <Route path="/about" element={<About />} />
-        <Route path="/create" element={<CreateNew addNew={addNew}/>} />
-      </Routes>
-      <Footer />
-    </div>
+      <div>
+        <h1>Software anecdotes</h1>
+        <Notification />
+        <Menu addNew={addNew} anecdotes={anecdotes} />
+        <Routes>
+          <Route
+            path="/anecdotes/:id"
+            element={<Anecdote anecdotes={anecdotes} />}
+          />
+          <Route
+            path="/anecdotes"
+            element={<AnecdoteList anecdotes={anecdotes} />}
+          />
+          <Route path="/about" element={<About />} />
+          <Route path="/create" element={<CreateNew addNew={addNew} />} />
+        </Routes>
+        <Footer />
+      </div>
     </Router>
-  )
-}
+  );
+};
 
-export default App
+export default App;
