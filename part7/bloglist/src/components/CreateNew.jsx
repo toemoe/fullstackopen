@@ -20,7 +20,9 @@ const CreateNew = () => {
       votes: 0,
     };
     await dispatch(addNewAnecdote(newAnecdote));
-    dispatch(showNotification(`You added new anecdote: ${newAnecdote.content}`, 5));
+    dispatch(
+      showNotification(`You added new anecdote: ${newAnecdote.content}`, 5),
+    );
     navigate("/anecdotes");
   };
 

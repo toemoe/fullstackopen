@@ -1,7 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { voteAnecdoteThunk, deleteAnecdoteThunk } from "../reducers/anecdoteSlice";
+import {
+  voteAnecdoteThunk,
+  deleteAnecdoteThunk,
+} from "../reducers/anecdoteSlice";
 import { showNotification } from "../reducers/notificationSlice";
 
 const Anecdote = ({ anecdotes = [] }) => {

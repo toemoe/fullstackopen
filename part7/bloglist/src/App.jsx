@@ -6,12 +6,13 @@ import About from "./components/About";
 import CreateNew from "./components/CreateNew";
 import Anecdote from "./components/Anecdote";
 import Notification from "./components/Notification";
+import Login from "./components/Login";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { showNotification } from "./reducers/notificationSlice";
 import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import { addNewAnecdote, initializeAnecdotes, voteAnecdoteThunk } from "./reducers/anecdoteSlice";
+import { addNewAnecdote, initializeAnecdotes } from "./reducers/anecdoteSlice";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -19,21 +20,18 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeAnecdotes());
-    console.log('Redux anecdotes:', anecdotes);
+    console.log("Redux anecdotes:", anecdotes);
   }, [dispatch]);
 
   const addNew = (anecdote) => {
     dispatch(addNewAnecdote(anecdote));
     dispatch(showNotification(`A new anecdote ${anecdote.content} created`));
   };
-  const vote = (anecdote) => {
-    dispatch(voteAnecdoteThunk(anecdote));
-    dispatch(showNotification(`Anecdote has been voted`));
-  };
 
   return (
     <Router>
       <div>
+        <Login />
         <h1>Software anecdotes</h1>
         <Notification />
         <Menu addNew={addNew} anecdotes={anecdotes} />
