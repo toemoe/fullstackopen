@@ -13,6 +13,9 @@ const Menu = () => {
       <Link style={padding} to="/about">
         about
       </Link>
+      <Link style={padding} to="/users">
+        users
+      </Link>
     </div>
   );
 };

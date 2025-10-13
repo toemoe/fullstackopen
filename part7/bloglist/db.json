@@ -14,5 +14,39 @@
       "info": "http://wiki.c2.com/?PrematureOptimization",
       "votes": 16
     }
+  ],
+  "users": [
+    {
+      "id": "u1",
+      "name": "Alice Johnson",
+      "username": "alice",
+      "anecdotes": [
+        {
+          "id": "11",
+          "title": "React patterns"
+        },
+        {
+          "id": "22",
+          "title": "Understanding Redux"
+        }
+      ]
+    },
+    {
+      "id": "u2",
+      "name": "Bob Smith",
+      "username": "bob",
+      "anecdotes": [
+        {
+          "id": "33",
+          "title": "Why testing matters"
+        }
+      ]
+    },
+    {
+      "id": "u3",
+      "name": "Charlie Brown",
+      "username": "charlie",
+      "anecdotes": []
+    }
   ]
 }

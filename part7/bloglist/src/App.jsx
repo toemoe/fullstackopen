@@ -13,14 +13,19 @@ import { showNotification } from "./reducers/notificationSlice";
 import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { addNewAnecdote, initializeAnecdotes } from "./reducers/anecdoteSlice";
+import { initializeUsers } from "./reducers/allUsersSlice";
+import UserList from "./components/UserList";
 
 const App = () => {
   const dispatch = useDispatch();
   const anecdotes = useSelector((state) => state.anecdotes);
+  const users = useSelector((state) => state.users);
 
   useEffect(() => {
     dispatch(initializeAnecdotes());
+    dispatch(initializeUsers());
     console.log("Redux anecdotes:", anecdotes);
+    console.log("Redux users:", users);
   }, [dispatch]);
 
   const addNew = (anecdote) => {
@@ -47,6 +52,7 @@ const App = () => {
           />
           <Route path="/about" element={<About />} />
           <Route path="/create" element={<CreateNew addNew={addNew} />} />
+          <Route path="/users" element={<UserList users={users} />} />
         </Routes>
         <Footer />
       </div>
