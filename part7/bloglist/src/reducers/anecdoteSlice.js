@@ -23,6 +23,18 @@ const anecdoteSlice = createSlice({
     deleteAnecdote(state, action) {
       return state.filter((anecdote) => anecdote.id !== action.payload);
     },
+    setComments(state, action) {
+      const { id, comments } = action.payload;
+      return state.map((anecdote) =>
+        anecdote.id === id ? { ...anecdote, comments } : anecdote );
+    },
+    addComment(state, action) {
+      const { id, comment } = action.payload;
+      return state.map((anecdote) =>
+      anecdote.id === id 
+      ? { ...anecdote, comments: [...(anecdote.comments || []), comment] } 
+      : anecdote );
+    }
   },
 });
 
@@ -32,6 +44,8 @@ export const {
   appendAnecdote,
   setAnecdotes,
   deleteAnecdote,
+  setComments,
+  addComment,
 } = anecdoteSlice.actions;
 
 export const initializeAnecdotes = () => {
@@ -69,6 +83,20 @@ export const deleteAnecdoteThunk = (id) => {
     } catch (error) {
       console.log(error);
     }
+  };
+};
+
+export const fetchComments = (id) => {
+  return async (dispatch) => {
+    const comments = await anecdoteService.getComments(id);
+    dispatch(setComments({ id, comments }));
+  };
+};
+
+export const addNewComment = (id, text) => {
+  return async (dispatch) => {
+    const comments = await anecdoteService.addComment(id, text);
+    dispatch(setComments({ id, comments }));
   };
 };
 

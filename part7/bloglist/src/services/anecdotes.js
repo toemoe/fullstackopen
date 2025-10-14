@@ -26,4 +26,17 @@ const deleteById = async (id) => {
   return response.data;
 };
 
-export default { getAll, createNew, update, deleteById };
+const getComments = async (id) => {
+  const response = await axios.get(`${baseUrl}/${id}`);
+  return response.data.comments || [];
+};
+
+const addComment = async (id, text) => {
+  const anecdoteRes = await axios.get(`${baseUrl}/${id}`);
+  const updatedComments = [...(anecdoteRes.data.comments || []), { id: Date.now(), text }];
+  const response = await axios.patch(`${baseUrl}/${id}`, { comments: updatedComments });
+  return response.data.comments;
+};
+
+
+export default { getAll, createNew, update, deleteById, getComments, addComment };

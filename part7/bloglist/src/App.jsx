@@ -21,12 +21,11 @@ const App = () => {
   const dispatch = useDispatch();
   const anecdotes = useSelector((state) => state.anecdotes);
   const users = useSelector((state) => state.users);
+  const comments = useSelector((state) => state.comments);
 
   useEffect(() => {
     dispatch(initializeAnecdotes());
     dispatch(initializeUsers());
-    console.log("Redux anecdotes:", anecdotes);
-    console.log("Redux users:", users);
   }, [dispatch]);
 
   const addNew = (anecdote) => {
@@ -45,7 +44,7 @@ const App = () => {
           <Route path="/" element={<Navigate to="/anecdotes" />} />
           <Route
             path="/anecdotes/:id"
-            element={<Anecdote anecdotes={anecdotes} />}
+            element={<Anecdote anecdotes={anecdotes} comments={comments} />}
           />
           <Route
             path="/anecdotes"
