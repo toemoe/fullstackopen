@@ -26,15 +26,17 @@ const anecdoteSlice = createSlice({
     setComments(state, action) {
       const { id, comments } = action.payload;
       return state.map((anecdote) =>
-        anecdote.id === id ? { ...anecdote, comments } : anecdote );
+        anecdote.id === id ? { ...anecdote, comments } : anecdote,
+      );
     },
     addComment(state, action) {
       const { id, comment } = action.payload;
       return state.map((anecdote) =>
-      anecdote.id === id 
-      ? { ...anecdote, comments: [...(anecdote.comments || []), comment] } 
-      : anecdote );
-    }
+        anecdote.id === id
+          ? { ...anecdote, comments: [...(anecdote.comments || []), comment] }
+          : anecdote,
+      );
+    },
   },
 });
 
@@ -93,9 +95,9 @@ export const fetchComments = (id) => {
   };
 };
 
-export const addNewComment = (id, text) => {
+export const addNewComment = (id, text, user) => {
   return async (dispatch) => {
-    const comments = await anecdoteService.addComment(id, text);
+    const comments = await anecdoteService.addComment(id, text, user);
     dispatch(setComments({ id, comments }));
   };
 };

@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   voteAnecdoteThunk,
@@ -16,20 +16,27 @@ const Anecdote = ({ anecdotes = [] }) => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const comment = useField("text");
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    dispatch(fetchComments(id));
+    if (id) dispatch(fetchComments(id));
   }, [dispatch, id]);
 
   if (!anecdotes || anecdotes.length === 0) return <p>Loading anecdote...</p>;
 
-  const anecdote = anecdotes.find((a) => a.id === id);
+  const anecdote = anecdotes.find((a) => a.id.toString() === id);
   if (!anecdote) return <p>Anecdote not found</p>;
 
   const addNew = async (e) => {
     e.preventDefault();
-    const newComment = comment.inputProps.value;
-    dispatch(addNewComment(id, newComment));
+    console.log("Current user:", user);
+    if (!user) {
+      dispatch(showNotification(`You must be logged in to comment`, 5));
+      comment.reset();
+      return;
+    }
+
+    dispatch(addNewComment(id, comment.inputProps.value, user));
     comment.reset();
   };
 
@@ -54,11 +61,15 @@ const Anecdote = ({ anecdotes = [] }) => {
       <button onClick={() => voteAnecdote(anecdote)}>vote</button>
       <button onClick={() => deleteAnecdote(anecdote.id)}>delete</button>
       <form onSubmit={addNew}>
-      <p><b>comments</b></p>
+        <p>
+          <b>comments</b>
+        </p>
         <ul>
-        {anecdote.comments?.map((c) => (
-          <li key={c.id}>{c.text}</li>
-        ))}
+          {anecdote.comments?.map((c) => (
+            <li key={c.id}>
+              <b>{c.user?.username || "Anonymous"}:</b> {c.text}
+            </li>
+          ))}
         </ul>
         <label>
           <input {...comment.inputProps} placeholder="comment" />

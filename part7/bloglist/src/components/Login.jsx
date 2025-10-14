@@ -10,7 +10,11 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newUser = { name: username.inputProps.value };
+    const newUser = {
+      id: Date.now(),
+      name: username.inputProps.value,
+      username: username.inputProps.value,
+    };
     dispatch(setUser(newUser));
     dispatch(showNotification(`Hello, ${newUser.name}`, 5));
     username.reset();

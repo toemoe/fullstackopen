@@ -31,12 +31,27 @@ const getComments = async (id) => {
   return response.data.comments || [];
 };
 
-const addComment = async (id, text) => {
-  const anecdoteRes = await axios.get(`${baseUrl}/${id}`);
-  const updatedComments = [...(anecdoteRes.data.comments || []), { id: Date.now(), text }];
-  const response = await axios.patch(`${baseUrl}/${id}`, { comments: updatedComments });
+const addComment = async (id, text, user) => {
+  const res = await axios.get(`${baseUrl}/${id}`);
+
+  const newComment = {
+    id: Date.now(),
+    text,
+    user: user ? { id: user.id, username: user.username } : null,
+  };
+
+  const updatedComments = [...(res.data.comments || []), newComment];
+  const response = await axios.patch(`${baseUrl}/${id}`, {
+    comments: updatedComments,
+  });
   return response.data.comments;
 };
 
-
-export default { getAll, createNew, update, deleteById, getComments, addComment };
+export default {
+  getAll,
+  createNew,
+  update,
+  deleteById,
+  getComments,
+  addComment,
+};

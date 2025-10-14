@@ -5,7 +5,7 @@
       "content": "If it hurts, do it more often",
       "author": "Jez Humble",
       "info": "https://martinfowler.com/bliki/FrequencyReducesDifficulty.html",
-      "votes": 1402,
+      "votes": 1405,
       "comments": [
         {
           "id": 1760451914154,
@@ -26,6 +26,29 @@
         {
           "id": 1760451920598,
           "text": "qewqeqweq"
+        },
+        {
+          "id": 1760457040333,
+          "text": "LOL",
+          "user": {}
+        },
+        {
+          "id": 1760457147893,
+          "text": "lol",
+          "user": {}
+        },
+        {
+          "id": 1760457247322,
+          "text": "123",
+          "user": {}
+        },
+        {
+          "id": 1760457414019,
+          "text": "lol",
+          "user": {
+            "id": 1760457409965,
+            "username": "alice"
+          }
         }
       ]
     },
@@ -55,23 +78,6 @@
         {
           "id": 1760454631576,
           "text": "ewrewr"
-        }
-      ]
-    },
-    {
-      "id": "d374",
-      "content": "sad",
-      "author": "dasdas",
-      "info": "sadas",
-      "votes": 4,
-      "comments": [
-        {
-          "id": 1760454645860,
-          "text": "1321"
-        },
-        {
-          "id": 1760454647754,
-          "text": "231eqwe"
         }
       ]
     }
