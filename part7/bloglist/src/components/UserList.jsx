@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const UserList = ({ users = [] }) => {
   if (!users || users.length === 1) return <div>Loading...</div>;
 
@@ -31,7 +33,7 @@ const UserList = ({ users = [] }) => {
           {users.map((user) => (
             <tr key={user.id}>
               <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                {user.name}
+                <Link to={`/users/${user.id}`}>{user.name}</Link>
               </td>
               <td style={{ border: "1px solid #ccc", padding: "8px" }}>
                 {user.anecdotes.length}

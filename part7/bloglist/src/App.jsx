@@ -15,6 +15,7 @@ import { Navigate } from "react-router-dom";
 import { addNewAnecdote, initializeAnecdotes } from "./reducers/anecdoteSlice";
 import { initializeUsers } from "./reducers/allUsersSlice";
 import UserList from "./components/UserList";
+import UserPage from "./components/UserPage";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -53,6 +54,7 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/create" element={<CreateNew addNew={addNew} />} />
           <Route path="/users" element={<UserList users={users} />} />
+          <Route path="/users/:id" element={<UserPage users={users} />} />
         </Routes>
         <Footer />
       </div>
