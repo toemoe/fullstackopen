@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import uniqueValidator from 'mongoose-unique-validator'
 
 const schema = new mongoose.Schema({
   title: {
@@ -19,7 +18,5 @@ const schema = new mongoose.Schema({
     { type: String}
   ]
 })
-
-schema.plugin(uniqueValidator)
 
 export default mongoose.model('Book', schema)
