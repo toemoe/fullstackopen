@@ -4,14 +4,16 @@
   "description": "",
   "license": "ISC",
   "author": "",
-  "type": "commonjs",
+  "type": "module",
   "main": "library-backend.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@apollo/server": "^5.0.0",
-    "graphql": "^16.11.0"
-  },
-  "devDependencies": {}
+    "dotenv": "^17.2.3",
+    "graphql": "^16.11.0",
+    "mongoose": "^8.19.1",
+    "mongoose-unique-validator": "^4.0.1"
+  }
 }
