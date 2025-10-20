@@ -12,7 +12,6 @@ dotenv.config()
 
 mongoose.set('strictQuery', false)
 const MONGODB_URI = process.env.MONGODB_URI
-const JWT_SECRET = process.env.JWT_SECRET || 'secret'
 
 try {
   await mongoose.connect(MONGODB_URI)
@@ -165,15 +164,14 @@ const resolvers = {
       }
     },
     createUser: async (root, args) => {
-      const existingUser = await User.findOne({ username: args.username })
-      if (existingUser) {
-        throw new GraphQLError('User already exists', {
-          extensions: { code: "BAD_USER_INPUT", invalidArgs: args.username }
-        })
-      }
       const user = new User({ username: args.username, favoriteGenre: args.favoriteGenre })
-      await user.save()
-      return user
+
+      return user.save()
+      .catch(error => {
+        throw new GraphQLError('Saving User Failed', {
+          extensions: {code: "BAD_USER_INPUT", invalidArgs: args.username, originalError: error}
+        })
+      })
     },
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username })
@@ -183,9 +181,9 @@ const resolvers = {
         })
       }
 
-      const token = jwt.sign({username: user.username, id: user._id }, JWT_SECRET)
+      const token = { username: user.username, id: user._id }
 
-      return { value: token }
+      return { value: jwt.sign(token, process.env.JWT_SECRET) }
     },
   }
 }
@@ -193,26 +191,21 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: async ({ req }) => {
-    console.log('Authorization header:', req.headers.authorization)
-    const auth = req.headers.authorization
-    if (auth && auth.toLowerCase().startsWith('bearer ')) {
-      const token = auth.substring(7)
-      try {
-        const decodedToken = jwt.verify(token, JWT_SECRET)
-        const currentUser = await User.findById(decodedToken.id)
-        return { currentUser }
-      } catch (e) {
-        console.log('JWT verify error:', e.message)
-        return { currentUser: null }
-      }
-    }
-    return { currentUser: null } 
-  }  
 })
 
 const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 }
+  listen: { port: 4000 },
+  context: async ({ req, res }) => {
+    const auth = req ? req.headers.authorization : null
+    if (auth && auth.startsWith('Bearer ')) {
+      const decodedToken = jwt.verify(
+        auth.substring(7), process.env.JWT_SECRET
+      )
+      const currentUser = await User.findById(decodedToken.id)
+      return { currentUser }
+    }
+    return {}
+  },
 })
 
 console.log(`Server ready at ${url}`)
