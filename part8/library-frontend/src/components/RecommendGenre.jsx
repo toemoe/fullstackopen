@@ -1,37 +1,56 @@
-import { ME_QUERY, ALL_BOOKS } from "../queries/queries.js"
-import { useQuery } from "@apollo/client"
+import { useQuery } from "@apollo/client";
+import { ALL_BOOKS, ME_QUERY } from "../queries/queries.js";
 
 const RecommendGenre = () => {
-  const { loading: meLoading, error: meError, data: meData } = useQuery(ME_QUERY)
-  const favoriteGenre = meData?.me?.favoriteGenre
+  const { data: userData, loading: userLoading, error: userError } = useQuery(ME_QUERY);
 
-  const { loading: booksLoading, error: booksError, data: booksData } = useQuery(ALL_BOOKS, {
+  const favoriteGenre = userData?.me?.favoriteGenre;
+  console.log(favoriteGenre)
+  const { loading, data, error } = useQuery(ALL_BOOKS, {
     skip: !favoriteGenre,
     variables: { genre: favoriteGenre },
-  })
+  });
 
-  if (meLoading || booksLoading) return <p>Loading...</p>
-  if (meError || booksError) return <p>Error...</p>
+  if (userLoading) return <div>Loading user data...</div>;
+  if (userError) return <div>Error loading user: {userError.message}</div>;
 
-  const books = booksData?.allBooks || []
+  if (!favoriteGenre) {
+    return <div>No recommendations to show. You do not have a favorite genre</div>;
+  }
+
+  if (loading) return <div>Loading recommendations...</div>;
+  if (error) return <div>Error loading recommended books: {error.message}</div>;
 
   return (
     <div>
-      <h2>Recommend</h2>
-      <p>Books in your favorite genre: <strong>{favoriteGenre}</strong></p>
-      {books.length === 0 ? (
-        <p>No books in this genre</p>
+      <h2>Recommendations</h2>
+      {data.allBooks.length === 0 ? (
+        <p>No books in your favorite genre <b>{favoriteGenre}</b></p>
       ) : (
-        <ul>
-          {books.map(b => (
-            <li key={b.title + b.author.name}>
-              {b.title} by {b.author?.name || "Unknown"} ({b.published || "Unknown"})
-            </li>
-          ))}
-        </ul>
+        <>
+          <p>Books in your favorite genre <b>{favoriteGenre}</b></p>
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Published</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.allBooks.map(book => (
+                <tr key={book.id}>
+                  <td>{book.title}</td>
+                  <td>{book.author?.name || "Unknown"}</td>
+                  <td>{book.published || "Unknown"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
       )}
     </div>
-  )
+  );
 }
 
-export default RecommendGenre
+export default RecommendGenre;

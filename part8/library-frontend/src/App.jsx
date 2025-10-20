@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
@@ -10,9 +10,19 @@ const App = () => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null);
 
+  useEffect(() => {
+    const savedToken = localStorage.getItem("library-user-token");
+    if (savedToken) setToken(savedToken);
+  }, []);
+
   if (!token) {
     return (
-      <LoginForm setToken={setToken} />
+      <LoginForm
+        setToken={(t) => {
+          setToken(t);
+          localStorage.setItem("library-user-token", t);
+        }}
+      />
     );
   }
 
@@ -24,13 +34,22 @@ const App = () => {
         <button onClick={() => setPage("add")}>add book</button>
         <button onClick={() => setPage("set")}>set birthyear</button>
         <button onClick={() => setPage("recommended")}>recommended</button>
-        <button onClick={() => setToken(null)}>logout</button>
+        <button
+          onClick={() => {
+            setToken(null);
+            localStorage.removeItem("library-user-token");
+            setPage("authors");
+          }}
+        >
+          logout
+        </button>
       </div>
-      { page === "recommended" && <RecommendGenre />}
-      { page === "authors" && <Authors show={page === "authors"} />}
-      { page === "books" && <Books show={page === "books"} /> }
-      { page === "add" && <NewBook show={page === "add"} /> }
-      { page === "set" && <SetBirthyear show={page === "set"} /> }
+
+      {page === "recommended" && <RecommendGenre />}
+      {page === "authors" && <Authors show={page === "authors"} />}
+      {page === "books" && <Books show={page === "books"} />}
+      {page === "add" && <NewBook show={page === "add"} />}
+      {page === "set" && <SetBirthyear show={page === "set"} />}
     </div>
   );
 };
