@@ -1,9 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { ALL_BOOKS, ALL_GENRES } from "../queries/queries";
-import { useState } from "react";
 
-const Books = (props) => {
-  const [selectedGenre, setSelectedGenre] = useState(null)
+const Books = ({ selectedGenre, setSelectedGenre }) => {
 
   const {data: booksData, error: booksError, loading: booksLoading } = useQuery(ALL_BOOKS, {
     variables: { genre: selectedGenre }

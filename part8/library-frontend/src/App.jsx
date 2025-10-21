@@ -5,15 +5,26 @@ import NewBook from "./components/NewBook";
 import SetBirthyear from "./components/SetBirthyear";
 import LoginForm from "./components/LoginForm";
 import RecommendGenre from "./components/RecommendGenre";
+import { ME_QUERY } from "./queries/queries";
+import { useQuery } from "@apollo/client";
 
 const App = () => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null);
+  const [selectedGenre, setSelectedGenre] = useState(null)
+  const { loading, error, data } = useQuery(ME_QUERY, {
+    skip: !token
+  });
 
   useEffect(() => {
     const savedToken = localStorage.getItem("library-user-token");
     if (savedToken) setToken(savedToken);
   }, []);
+  
+  if (loading) return <div>Loading user data...</div>;
+  if (error) return <div>Failed to load user info</div>;
+  
+  const favoriteGenre = data?.me?.favoriteGenre;
 
   if (!token) {
     return (
@@ -45,10 +56,10 @@ const App = () => {
         </button>
       </div>
 
-      {page === "recommended" && <RecommendGenre />}
+      {page === "recommended" && <RecommendGenre favoriteGenre={favoriteGenre}/>}
       {page === "authors" && <Authors show={page === "authors"} />}
-      {page === "books" && <Books show={page === "books"} />}
-      {page === "add" && <NewBook show={page === "add"} />}
+      {page === "books" && <Books show={page === "books"} selectedGenre={selectedGenre} setSelectedGenre={setSelectedGenre} />}
+      {page === "add" && <NewBook show={page === "add"} selectedGenre={selectedGenre} />}
       {page === "set" && <SetBirthyear show={page === "set"} />}
     </div>
   );
