@@ -15,4 +15,22 @@ const calculateBmi = (height: number, weight: number): string => {
   } else return "Obese Class III (Very severely obese)"
 }
 
-console.log(calculateBmi(180, 74))
+const parseArgumentsBmi = (args: string[]): { height: number, weight: number } => {
+  if (args.length !== 4) throw new Error('Not enough arguments')
+
+    const height = Number(args[2])
+    const weight = Number(args[3])
+
+    if (isNaN(height) && isNaN(weight)) {
+      throw new Error('Provided values were not numbers!')
+    }
+
+    return { height, weight }
+};
+
+try {
+  const { height, weight } = parseArgumentsBmi(process.argv)
+  console.log(calculateBmi(height, weight))
+} catch (e: unknown) {
+  console.log('Error, something bad happened, message: ', e)
+}

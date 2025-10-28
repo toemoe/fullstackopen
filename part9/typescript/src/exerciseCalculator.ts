@@ -1,12 +1,11 @@
-
 interface Result {
-  periodLength: number,
-  trainingDays: number,
-  success: boolean,
-  rating: number,
-  ratingDescription: string,
-  target: number,
-  average: number
+  periodLength: number;
+  trainingDays: number;
+  success: boolean;
+  rating: number;
+  ratingDescription: string;
+  target: number;
+  average: number;
 }
 
 const calculateExercises = (hours: number[], target: number): Result => {
@@ -18,15 +17,15 @@ const calculateExercises = (hours: number[], target: number): Result => {
   let rating: number;
   let ratingDescription: string;
 
-  if (average < target) {
+  if (average >= target) {
     rating = 3;
-    ratingDescription = "You can do better!";
+    ratingDescription = "You're doing great!";
   } else if (average >= target * 0.7) {
     rating = 2;
     ratingDescription = "Not too bad but could be better.";
   } else {
-    rating = 1,
-    ratingDescription = "You're doing great!"
+    rating = 1;
+    ratingDescription = "You can do better!";
   }
 
   return {
@@ -36,8 +35,32 @@ const calculateExercises = (hours: number[], target: number): Result => {
     rating,
     ratingDescription,
     target,
-    average
-  }
-}
+    average,
+  };
+};
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+const parseArgumentsExercises = (args: string[]): { target: number; hours: number[] } => {
+  if (args.length < 4) {
+    throw new Error("Usage: npm run calculateExercises <target> <dailyHours...>");
+  }
+
+  const target = Number(args[2]);
+  const hours = args.slice(3).map(Number);
+
+  if (isNaN(target) || hours.some(isNaN)) {
+    throw new Error("All provided values must be numbers!");
+  }
+
+  return { target, hours };
+};
+
+try {
+  const { target, hours } = parseArgumentsExercises(process.argv);
+  console.log(calculateExercises(hours, target));
+} catch (e: unknown) {
+  let errorMessage = "Error: ";
+  if (e instanceof Error) {
+    errorMessage += e.message;
+  }
+  console.log(errorMessage);
+}
