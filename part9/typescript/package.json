@@ -1,11 +1,16 @@
 {
   "devDependencies": {
+    "@types/express": "^5.0.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
   "scripts": {
     "ts-node": "ts-node",
     "calculateBmi": "ts-node ./src/bmiCalculator.ts",
-    "calculateExercises": "ts-node ./src/exerciseCalculator.ts"
+    "calculateExercises": "ts-node ./src/exerciseCalculator.ts",
+    "start": "ts-node ./src/index.ts"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
   }
 }
