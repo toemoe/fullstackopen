@@ -8,7 +8,7 @@ interface Result {
   average: number;
 }
 
-const calculateExercises = (hours: number[], target: number): Result => {
+export const calculateExercises = (hours: number[], target: number): Result => {
   const periodLength = hours.length;
   const trainingDays = hours.filter(hour => hour > 0).length;
   const average = hours.reduce((acc, cur) => acc + cur, 0) / periodLength;
@@ -54,13 +54,16 @@ const parseArgumentsExercises = (args: string[]): { target: number; hours: numbe
   return { target, hours };
 };
 
-try {
-  const { target, hours } = parseArgumentsExercises(process.argv);
-  console.log(calculateExercises(hours, target));
-} catch (e: unknown) {
-  let errorMessage = "Error: ";
-  if (e instanceof Error) {
-    errorMessage += e.message;
+
+if (require.main === module) {
+  try {
+    const { target, hours } = parseArgumentsExercises(process.argv);
+    console.log(calculateExercises(hours, target));
+  } catch (e: unknown) {
+    let errorMessage = "Error: ";
+    if (e instanceof Error) {
+      errorMessage += e.message;
+    }
+    console.log(errorMessage);
   }
-  console.log(errorMessage);
 }
