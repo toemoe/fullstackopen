@@ -1,7 +1,8 @@
 import express, { Response, Request } from 'express';
 import PatientsService from '../services/service';
 import { v1 as uuid } from 'uuid';
-import { NewPatientRequest, Patient } from '../types/types';
+import { Patient } from '../types/types';
+import { NewPatientSchema, NewPatientRequest } from '../types/validation';
 const router = express.Router();
 
 router.get('/', (_req, res) => {
@@ -10,12 +11,16 @@ router.get('/', (_req, res) => {
 
 router.post('/', (req: Request<unknown, unknown, NewPatientRequest>, res: Response) => {
   try {
-    const { name, dateOfBirth, ssn, gender, occupation } = req.body;
+    const parseResult = NewPatientSchema.safeParse(req.body);
 
-    if (!name || !dateOfBirth || !gender || !occupation) {
-      return res.status(400).send({ error: 'Patient is not valid' });
-    }
-    const newPatient: Patient = { id: uuid() as string, name, dateOfBirth, ssn, gender, occupation };
+    if (!parseResult.success) {
+      return res.status(400).json({ error: 'Patient is not valid' });
+    }    
+
+    const { name, dateOfBirth, ssn, gender, occupation } = parseResult.data;
+
+    const newPatient: Patient = { id: uuid(), name, dateOfBirth, ssn, gender, occupation };
+
     PatientsService.addPatient(newPatient);
 
     return res.status(201).json(newPatient);
@@ -25,7 +30,7 @@ router.post('/', (req: Request<unknown, unknown, NewPatientRequest>, res: Respon
       errorMessage = err.message;
     }
     return res.status(400).send({ error: errorMessage });
-  }  
+  }
 });
 
 export default router;
