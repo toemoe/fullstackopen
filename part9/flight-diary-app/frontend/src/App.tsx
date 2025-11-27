@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-
 import { apiBaseUrl } from "./constants";
-import type { Diary } from "./types";
+import type { Diary, NewDiary } from "./types";
+import NewDiaryForm from "./components/NewDiaryForm";
 
 const App = () => {
   const [diaries, setDiaries] = useState<Diary[]>([]);
@@ -18,11 +18,21 @@ const App = () => {
     };
     void fetchData();
   }, []);
+
+  const addNewDiary = async (entry: NewDiary) => {
+    try {
+      const response = await axios.post<Diary>(`${apiBaseUrl}/diaries`, entry);
+      setDiaries((prev) => [...prev, response.data]);
+    } catch (error) {
+      console.error("Error fetching new diary:", error instanceof Error ? error.message : error);
+    }
+  };
+  
   
   return (
     <div className="App">
       <h1>Flight Diary App</h1>
-      <button>add new</button>
+      <NewDiaryForm addNewDiary={addNewDiary}/>
       {diaries.map((d) => (
         <li key={d.id}>
         <strong>{d.date}</strong> – {d.weather}, {d.visibility}
