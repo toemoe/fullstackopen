@@ -1,8 +1,6 @@
 import diaryData from '../../data/entries';
 
-import { 
-  DiaryEntry, NewDiaryEntry
- } from '../types';
+import { DiaryEntry, NewDiaryEntry } from '../../../shared/types';
 
 const diaries: DiaryEntry[] = diaryData;
 
