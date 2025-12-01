@@ -23,7 +23,6 @@ const getById = async (id: string): Promise<Patient> => {
   return response.data;
 };
 
-// Явный экспорт объекта
 const patientService = {
   getAll,
   create,
